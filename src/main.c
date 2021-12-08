@@ -2,10 +2,13 @@
 #include <allegro5/allegro5.h>
 
 #include "allegro_init.h"
+#include "sprite.h"
 
 #include "lua/lua.h"
 #include "lua/lauxlib.h"
 #include "lua/lualib.h"
+
+static lua_State *Lstate = NULL;
 
 static void stackDump(lua_State * L)
 {
@@ -41,8 +44,10 @@ static int functiontest(lua_State * L)
     return 1;
 }
 
-void game_loop(void) {
-    printf("Game loop!");
+void game_loop(void)
+{
+    lua_getglobal(Lstate, "draw");
+    lua_pcall(Lstate, 0, 0, 0);
 }
 
 int main()
@@ -50,21 +55,23 @@ int main()
     allegro_init();
     allegro_set_game_loop(game_loop);
 
-    lua_State *L = luaL_newstate();
+    Lstate = luaL_newstate();
 
-    luaL_openlibs(L);
+    luaL_openlibs(Lstate);
 
-    lua_newtable(L);
-    lua_pushnumber(L, 5.456);
-    lua_setfield(L, -2, "numba");
-    lua_setglobal(L, "bigchungus");
+    lua_newtable(Lstate);
+    lua_pushnumber(Lstate, 5.456);
+    lua_setfield(Lstate, -2, "numba");
+    lua_setglobal(Lstate, "bigchungus");
 
-    lua_pushcfunction(L, functiontest);
-    lua_setglobal(L, "functiontest");
+    sprite_lua_init(Lstate);
 
-    luaL_loadfile(L, "test.lua");
-    lua_pcall(L, 0, 0, 0);
+    luaL_loadfile(Lstate, "test.lua");
+    lua_pcall(Lstate, 0, 0, 0);
+    //lua_call(Lstate, 0, 0);
 
-    lua_close(L);
+    allegro_game_loop();
+
+    lua_close(Lstate);
     return 0;
 }
