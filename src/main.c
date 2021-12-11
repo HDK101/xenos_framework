@@ -3,6 +3,9 @@
 
 #include "allegro_init.h"
 #include "sprite.h"
+#include "keyboard.h"
+#include "sound.h"
+#include "music.h"
 
 #include "lua/lua.h"
 #include "lua/lauxlib.h"
@@ -44,8 +47,11 @@ static int functiontest(lua_State * L)
     return 1;
 }
 
-void game_loop(void)
+void game_loop(double *delta_time)
 {
+    lua_getglobal(Lstate, "process");
+    lua_pushnumber(Lstate, *delta_time);
+    lua_pcall(Lstate, 1, 0, 0);
     lua_getglobal(Lstate, "draw");
     lua_pcall(Lstate, 0, 0, 0);
 }
@@ -65,6 +71,14 @@ int main()
     lua_setglobal(Lstate, "bigchungus");
 
     sprite_lua_init(Lstate);
+
+    keyboard_init();
+    keyboard_lua_init(Lstate);
+
+    sound_init();
+    sound_lua_init(Lstate);
+
+    music_lua_init(Lstate);
 
     luaL_loadfile(Lstate, "test.lua");
     lua_pcall(Lstate, 0, 0, 0);

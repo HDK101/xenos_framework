@@ -5,6 +5,8 @@
 #include <allegro5/allegro_image.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "lua/lauxlib.h"
 #include "lua/lualib.h"
 
@@ -34,7 +36,7 @@ static cvector_vector_type(int) sprites_unused_indexes = NULL;
     sprites_size_width[index] = al_get_bitmap_width(sprites[index]);
     sprites_size_height[index] = al_get_bitmap_height(sprites[index]);
     sprites_id[index]++;
-    printf("File name: %s\n", file_name);
+    SPRITE_DEBUG_PRINT("File name: %s\n", file_name);
 }
 
 // Internal function
@@ -81,7 +83,7 @@ int sprite_lua_load_sprite(lua_State * L)
     const char *file_name = luaL_checkstring(L, 1);
     int sprite_index = load_sprite(file_name);
 
-    printf("Sprite index: %d\n", sprite_index);
+    SPRITE_DEBUG_PRINT("Sprite index: %d\n", sprite_index);
     lua_newtable(L);
     lua_pushinteger(L, sprite_index);
     lua_setfield(L, -2, "index");
@@ -119,7 +121,7 @@ int sprite_lua_destroy_sprite(lua_State * L)
 
     for (it = cvector_begin(sprites_unused_indexes);
          it != cvector_end(sprites_unused_indexes); ++it) {
-        printf("Unused index: %d\n", *it);
+        SPRITE_DEBUG_PRINT("Unused index: %d\n", *it);
     }
     return 0;
 }
@@ -140,7 +142,7 @@ int sprite_lua_draw_sprite(lua_State * L)
     lua_getfield(L, 1, "index");
     int index = luaL_checkinteger(L, -1);
 
-    printf("Sprite index: %d\n", index);
+    SPRITE_DEBUG_PRINT("Sprite index: %d\n", index);
 
     lua_getfield(L, 1, "file_name");
     const char *coming_file_name = luaL_checkstring(L, -1);
@@ -180,8 +182,8 @@ int sprite_lua_draw_sprite(lua_State * L)
     lua_getfield(L, 2, "angle");
     double angle = luaL_checknumber(L, -1);
 
-    printf("X: %lf Y: %lf\n", x, y);
-    printf("Angle: %lf", angle);
+    SPRITE_DEBUG_PRINT("X: %lf Y: %lf\n", x, y);
+    SPRITE_DEBUG_PRINT("Angle: %lf\n", angle);
     al_draw_rotated_bitmap(sprites[index], sprites_size_width[index] / 2,
                            sprites_size_height[index] / 2, x, y, angle, 0);
     return 0;

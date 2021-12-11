@@ -18,6 +18,7 @@ $(EXE): $(OBJECTS) $(LUAOBJECTS)
 
 clean:
 	@find . -name '*.o' -delete
+	@find . -name '*.c~' -delete
 
 format:
 	@indent -bad -nbap -nsob -br -cli2 -ce -cli4 -nbc -bbo -npcs -ncs -i4 -lp -npsl -lps -nut **/*.c
