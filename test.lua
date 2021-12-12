@@ -8,14 +8,10 @@ local x = 1
 local sample = sound.load_sample("audio_elephant.wav")
 sound.play(sample)
 
-music.load_stream("test.ogg")
-music.play()
-music.load_stream("test.ogg")
-music.play()
-music.load_stream("test.ogg")
-music.play()
-music.load_stream("test.ogg")
-music.play()
+music_test = music.load_stream("test.ogg")
+print(music_test.index)
+print(music_test.id)
+music.play(music_test)
 
 function process(delta)
   print(delta)
