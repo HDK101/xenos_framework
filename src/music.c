@@ -47,15 +47,15 @@ static int music_lua_load_stream(lua_State *L) {
     }
     const char *file_name = luaL_checkstring(L, -1);
     const int index = load_stream(file_name);
-    
+
     lua_newtable(L);
 
     lua_pushinteger(L, index);
     lua_setfield(L, -2, "index");
-    
+
     lua_pushinteger(L, streams_id[index]);
     lua_setfield(L, -2, "id");
-    
+
     return 1;
 }
 
@@ -72,7 +72,7 @@ static int music_lua_play(lua_State *L) {
 
     lua_getfield(L, 1, "id");
     int id = luaL_checkinteger(L, -1);
-    
+
     if (id != streams_id[index]) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Different IDs detected, could not play stream.\n");
@@ -95,7 +95,7 @@ int music_lua_init(lua_State *L) {
 
     lua_pushcfunction(L, music_lua_load_stream);
     lua_setfield(L, -2, "load_stream");
-    
+
     lua_pushcfunction(L, music_lua_play);
     lua_setfield(L, -2, "play");
 
@@ -105,6 +105,14 @@ int music_lua_init(lua_State *L) {
 int music_init(void) {
     for (int i = 0; i < MAX_STREAMS; i++) {
         streams_id[i] = 0;
+        streams[i] = NULL;
+    }
+    return 0;
+}
+
+int music_destroy(void) {
+    for (int i = 0; i < MAX_STREAMS; i++) {
+        if (streams[i] != NULL) al_destroy_audio_stream(streams[i]);
     }
     return 0;
 }
