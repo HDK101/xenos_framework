@@ -14,7 +14,7 @@ print(music_test.id)
 music.play(music_test)
 
 function process(delta)
-  print(delta)
+--  print(delta)
 end
 
 function draw()
@@ -26,5 +26,21 @@ function draw()
   end
   if keyboard.release(keyboard.code.LWIN) then
     print("Bye")
+  end
+
+  if mouse.press(0) then
+    print("Mouse press!")
+  end
+  
+  if mouse.release(0) then
+    print("Mouse release!")
+  end
+  
+  if mouse.press(2) then
+    print("Mouse press!")
+  end
+  
+  if mouse.release(2) then
+    print("Mouse release!")
   end
 end

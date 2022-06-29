@@ -7,6 +7,7 @@
 
 #include "allegro_init.h"
 #include "keyboard.h"
+#include "mouse.h"
 
 static ALLEGRO_TIMER *timer = NULL;
 static ALLEGRO_EVENT_QUEUE *queue = NULL;
@@ -20,6 +21,7 @@ int allegro_init(void)
 {
     al_init();
     al_install_keyboard();
+    al_install_mouse();
     al_install_audio();
     al_init_acodec_addon();
     al_reserve_samples(16);
@@ -33,6 +35,7 @@ int allegro_init(void)
     display = al_create_display(320, 200);
 
     al_register_event_source(queue, al_get_keyboard_event_source());
+    al_register_event_source(queue, al_get_mouse_event_source());
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_timer_event_source(timer));
     return 0;
@@ -57,8 +60,12 @@ void allegro_game_loop(void)
                 keyboard_event_down(&event);
             else if(event.type == ALLEGRO_EVENT_KEY_UP)
                 keyboard_event_up(&event);
+            else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+                mouse_event_down(&event);
+            else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+                mouse_event_up(&event);
         }
-        
+
         if (game_break)
             break;
 
@@ -68,6 +75,7 @@ void allegro_game_loop(void)
             al_clear_to_color(al_map_rgb(0, 0, 0));
             game_loop_pointer(&delta_time);
             keyboard_clear();
+            mouse_clear();
             al_flip_display();
 
             redraw = false;

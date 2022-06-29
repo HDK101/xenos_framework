@@ -4,6 +4,7 @@
 #include "allegro_init.h"
 #include "sprite.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "sound.h"
 #include "music.h"
 
@@ -65,15 +66,13 @@ int main()
 
     luaL_openlibs(Lstate);
 
-    lua_newtable(Lstate);
-    lua_pushnumber(Lstate, 5.456);
-    lua_setfield(Lstate, -2, "numba");
-    lua_setglobal(Lstate, "bigchungus");
-
     sprite_lua_init(Lstate);
 
     keyboard_init();
     keyboard_lua_init(Lstate);
+
+    mouse_init();
+    mouse_lua_init(Lstate);
 
     sound_init();
     sound_lua_init(Lstate);
