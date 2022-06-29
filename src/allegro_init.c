@@ -49,7 +49,7 @@ void allegro_game_loop(void)
     ALLEGRO_EVENT event;
 
     al_start_timer(timer);
-    while (1) {
+    while (!game_break) {
         while (!al_event_queue_is_empty(queue)) {
             al_wait_for_event(queue, &event);
             if (event.type == ALLEGRO_EVENT_TIMER)
@@ -66,8 +66,9 @@ void allegro_game_loop(void)
                 mouse_event_up(&event);
         }
 
-        if (game_break)
-            break;
+        if (game_break) {
+            return;
+        }
 
         if (redraw) {
             delta_time = al_get_time() - elapsed_time;
@@ -88,6 +89,11 @@ void allegro_destroy(void)
     al_destroy_display(display);
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
+
+    al_uninstall_audio();
+    al_uninstall_keyboard();
+    al_uninstall_mouse();
+    al_uninstall_system();
 }
 
 void allegro_set_game_loop(void (*loop)(double*))

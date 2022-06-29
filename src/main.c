@@ -77,6 +77,7 @@ int main()
     sound_init();
     sound_lua_init(Lstate);
 
+    music_init();
     music_lua_init(Lstate);
 
     luaL_loadfile(Lstate, "test.lua");
@@ -84,6 +85,9 @@ int main()
     //lua_call(Lstate, 0, 0);
 
     allegro_game_loop();
+
+    music_destroy();
+    allegro_destroy();
 
     lua_close(Lstate);
     return 0;
