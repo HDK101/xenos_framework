@@ -4,9 +4,6 @@ local sprite_test = sprite.load_file("player.png")
 
 local x = 1
 
-print(json_test.color)
-print(json_test.object.a)
-print(json_test.object.c)
 
 --local sample = sound.load_sample("audio_elephant.wav")
 -- sound.play(sample)
@@ -23,16 +20,13 @@ end
 function draw()
   x = x + 1
 
-  sprite.draw(sprite_test, { x = mouse.get_position().x, y = mouse.get_position().y, angle = x })
+  sprite.draw(sprite_test, { x = x, y = x, angle = x })
   if keyboard.press(keyboard.code.LWIN) then
     print("Hello")
   end
   if keyboard.release(keyboard.code.LWIN) then
     print("Bye")
   end
-
-  print(mouse.get_position().x)
-  print(mouse.get_position().y)
 
   if mouse.press(0) then
     print("Mouse press!")

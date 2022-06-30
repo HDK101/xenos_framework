@@ -17,7 +17,7 @@ static void (*game_loop_pointer)(double*);
 
 static double elapsed_time = 0.0;
 
-int allegro_init(int width, int height)
+int allegro_init(void)
 {
     al_init();
     al_install_keyboard();
@@ -32,7 +32,7 @@ int allegro_init(int width, int height)
 
     al_set_new_display_option(ALLEGRO_VSYNC, 2, ALLEGRO_REQUIRE);
 
-    display = al_create_display(width, height);
+    display = al_create_display(320, 200);
 
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_mouse_event_source());
@@ -64,9 +64,6 @@ void allegro_game_loop(void)
                 mouse_event_down(&event);
             else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
                 mouse_event_up(&event);
-            else if(event.type == ALLEGRO_EVENT_MOUSE_AXES)
-                mouse_event_move(&event);
-
         }
 
         if (game_break) {

@@ -7,9 +7,6 @@
 #include "mouse.h"
 #include "sound.h"
 #include "music.h"
-#include "json.h"
-
-#include "cJSON.h"
 
 #include "lua/lua.h"
 #include "lua/lauxlib.h"
@@ -44,6 +41,13 @@ static void stackDump(lua_State * L)
     }
 }
 
+static int functiontest(lua_State * L)
+{
+    printf("Hello world!\n");
+    lua_pushnumber(L, 565);
+    return 1;
+}
+
 void game_loop(double *delta_time)
 {
     lua_getglobal(Lstate, "process");
@@ -55,7 +59,7 @@ void game_loop(double *delta_time)
 
 int main()
 {
-    allegro_init(640, 480);
+    allegro_init();
     allegro_set_game_loop(game_loop);
 
     Lstate = luaL_newstate();
@@ -75,15 +79,12 @@ int main()
 
     music_init();
     music_lua_init(Lstate);
-    
-    cJSON *json = cJSON_Parse("{\"array\":[1,2,3],\"boolean\":true,\"color\":\"gold\",\"null\":null,\"number\":123,\"object\":{\"a\":\"b\",\"c\":\"d\"},\"string\":\"Hello World\"}");
-    create_json(Lstate, json);
-    lua_setglobal(Lstate, "json_test");
 
     luaL_loadfile(Lstate, "test.lua");
     lua_pcall(Lstate, 0, 0, 0);
+    //lua_call(Lstate, 0, 0);
 
-//    allegro_game_loop();
+    allegro_game_loop();
 
     music_destroy();
     allegro_destroy();
