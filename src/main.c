@@ -76,9 +76,8 @@ int main()
     music_init();
     music_lua_init(Lstate);
     
-    cJSON *json = cJSON_Parse("{\"array\":[1,2,3],\"boolean\":true,\"color\":\"gold\",\"null\":null,\"number\":123,\"object\":{\"a\":\"b\",\"c\":\"d\"},\"string\":\"Hello World\"}");
+    cJSON *json = cJSON_Parse("{\"array\":[{ \"a\": \"w\" },2,3],\"boolean\":false,\"color\":\"gold\",\"null\":null,\"number\":123,\"object\":{\"a\":\"b\",\"c\":\"d\"},\"string\":\"Hello World\"}");
     create_json(Lstate, json);
-    lua_setglobal(Lstate, "json_test");
 
     luaL_loadfile(Lstate, "test.lua");
     lua_pcall(Lstate, 0, 0, 0);
