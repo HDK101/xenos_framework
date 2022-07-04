@@ -10,6 +10,8 @@
 
 static void stackDump(lua_State * L)
 {
+        printf("\n");           /* end the listing */
+        printf("\n");           /* end the listing */
     int i;
     int top = lua_gettop(L);
 
@@ -33,6 +35,8 @@ static void stackDump(lua_State * L)
         printf("  ");           /* put a separator */
         printf("\n");           /* end the listing */
     }
+        printf("\n");           /* end the listing */
+        printf("\n");           /* end the listing */
 }
 
 static cvector_vector_type(int) array_sizes = NULL;
@@ -106,3 +110,64 @@ void create_json(lua_State *L, cJSON *json) {
   lua_setglobal(L, "json_test");
 }
 
+cJSON *navigate_stringify(lua_State *L) {
+    cJSON *json = cJSON_CreateObject();
+
+    lua_pushnil(L);
+    while (lua_next(L, -2) != 0) {
+        if (lua_isstring(L, -2) && lua_isnumber(L, -1)) {
+            stackDump(L);
+            const char *key = lua_tostring(L, -2);
+            double value = lua_tonumber(L, -1);
+            putchar('\n');
+            printf("Key %s\n", key);
+            printf("Value %g\n", value);
+            putchar('\n');
+            stackDump(L);
+        }
+        else if (lua_isstring(L, -2) && lua_isstring(L, -1)) {
+            stackDump(L);
+            const char *key = lua_tostring(L, -2);
+            const char *value = lua_tostring(L, -1);
+            putchar('\n');
+            printf("Key %s\n", key);
+            printf("Value %s\n", value);
+            putchar('\n');
+        }
+        else if (lua_isstring(L, -2) && lua_istable(L , -1)) {
+            const char *key = lua_tostring(L, -2);
+            cJSON *to_add = navigate_stringify(L);
+            cJSON_AddItemToObject(json, key, to_add);
+        }
+        lua_pop(L, 1);
+    }
+
+    return json;
+}
+
+int to_json(lua_State *L) {
+    if (lua_gettop(L) != 1) {
+        fprintf(stderr, "\n--ERROR--\n");
+        fprintf(stderr, "Expected exactly 1 argument.\n");
+        return lua_error(L);
+    }
+    
+    // get table
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    stackDump(L);
+    cJSON *json = navigate_stringify(L);
+    printf("%s\n", cJSON_Print(json));
+
+    return 0;
+    
+}
+
+void json_lua_init(lua_State *L) {
+    lua_newtable(L);
+
+    lua_pushcfunction(L, to_json);
+    lua_setfield(L, -2, "stringify");
+    
+    lua_setglobal(L, "json");
+}

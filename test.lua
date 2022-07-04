@@ -2,28 +2,12 @@ local sprite_test = sprite.load_file("player.png")
 -- sprite.destroy(sprite_test)
 -- sprite.load_file("test.png")
 
-local x = 1
+a = {}
+a.x = {}
+a.x.b = 1
 
+json.stringify(a)
 print("walter")
-
-function dumpTable(table, depth)
-  if (depth > 200) then
-    print("Error: Depth > 200 in dumpTable()")
-    return
-  end
-  for k,v in pairs(table) do
-    if (type(v) == "table") then
-      print(string.rep("  ", depth)..k..":")
-      dumpTable(v, depth+1)
-    else
-      print(string.rep("  ", depth)..k..": ",v)
-    end
-  end
-end
-
-
-print(json_test.array[1].a)
-dumpTable(json_test, 199)
 
 --local sample = sound.load_sample("audio_elephant.wav")
 -- sound.play(sample)

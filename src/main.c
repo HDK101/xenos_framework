@@ -75,12 +75,15 @@ int main()
 
     music_init();
     music_lua_init(Lstate);
+
+    json_lua_init(Lstate);
     
     cJSON *json = cJSON_Parse("{\"array\":[{ \"a\": \"w\" },2,3],\"boolean\":false,\"color\":\"gold\",\"null\":null,\"number\":123,\"object\":{\"a\":\"b\",\"c\":\"d\"},\"string\":\"Hello World\"}");
     create_json(Lstate, json);
 
     luaL_loadfile(Lstate, "test.lua");
-    lua_pcall(Lstate, 0, 0, 0);
+    int a = lua_pcall(Lstate, 0, 0, 0);
+    printf("%d\n", a);
 
 //    allegro_game_loop();
 
