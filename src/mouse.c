@@ -14,6 +14,9 @@ static bool mouse_right_pressed = 0;
 static bool mouse_left_released = 0;
 static bool mouse_right_released = 0;
 
+static int mouse_x = 0;
+static int mouse_y = 0;
+
 // Lua function
 // Function: press
 // Arguments:
@@ -31,7 +34,7 @@ static int mouse_lua_press(lua_State *L) {
 }
 
 // Lua function
-// Function: press
+// Function: release
 // Arguments:
 //    keycode: integer
 static int mouse_lua_release(lua_State *L) {
@@ -46,6 +49,17 @@ static int mouse_lua_release(lua_State *L) {
     return 1;
 }
 
+// Lua function
+// Function: get_position
+static int mouse_lua_get_position(lua_State *L) {
+    lua_newtable(L);
+    lua_pushnumber(L, mouse_x);
+    lua_setfield(L, -2, "x");
+    lua_pushnumber(L, mouse_y);
+    lua_setfield(L, -2, "y");
+    return 1;
+}
+
 void mouse_event_down(ALLEGRO_EVENT *event) {
     mouse_left_pressed = event->mouse.button & 1;
     mouse_right_pressed = event->mouse.button & 2;
@@ -54,6 +68,11 @@ void mouse_event_down(ALLEGRO_EVENT *event) {
 void mouse_event_up(ALLEGRO_EVENT *event) {
     mouse_left_released = event->mouse.button & 1;
     mouse_right_released = event->mouse.button & 2;
+}
+
+void mouse_event_move(ALLEGRO_EVENT *event) {
+    mouse_x = event->mouse.x;
+    mouse_y = event->mouse.y;
 }
 
 void mouse_clear(void) {
@@ -72,6 +91,9 @@ void mouse_lua_init(lua_State *L) {
 
     lua_pushcfunction(L, mouse_lua_release);
     lua_setfield(L, -2, "release");
+
+    lua_pushcfunction(L, mouse_lua_get_position);
+    lua_setfield(L, -2, "get_position");
 
     lua_setglobal(L, "mouse");
 }
