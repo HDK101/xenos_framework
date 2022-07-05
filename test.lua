@@ -5,9 +5,18 @@ local sprite_test = sprite.load_file("player.png")
 a = {}
 a.x = {}
 a.x.b = 1
+a.x.a = {}
+a.x.a.a = 2
+a.x.a.b = 2
 
-json.stringify(a)
-print("walter")
+str = json.stringify({1,2,"asdasd", false, a})
+-- json.stringify(a)
+print(str)
+
+-- parsed = json.parse("{ \"a\": 1 }")
+parsed = json.parse("{ 1 }")
+
+print(parsed.a)
 
 --local sample = sound.load_sample("audio_elephant.wav")
 -- sound.play(sample)
