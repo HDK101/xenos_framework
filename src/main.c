@@ -87,6 +87,9 @@ int main()
     music_destroy();
     allegro_destroy();
 
+    music_destroy();
+    allegro_destroy();
+
     lua_close(Lstate);
     return 0;
 }
