@@ -180,6 +180,7 @@ static int json_lua_stringify(lua_State *L) {
 }
 
 void json_lua_init(lua_State *L) {
+    lua_getglobal(L, "xenos");
     lua_newtable(L);
     
     lua_pushcfunction(L, json_lua_stringify);
@@ -188,5 +189,5 @@ void json_lua_init(lua_State *L) {
     lua_pushcfunction(L, json_lua_parse);
     lua_setfield(L, -2, "parse");
     
-    lua_setglobal(L, "json");
+    lua_setfield(L, -2, "json");
 }

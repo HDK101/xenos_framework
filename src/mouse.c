@@ -84,6 +84,7 @@ void mouse_clear(void) {
 }
 
 void mouse_lua_init(lua_State *L) {
+    lua_getglobal(L, "xenos");
     lua_newtable(L);
 
     lua_pushcfunction(L, mouse_lua_press);
@@ -95,7 +96,7 @@ void mouse_lua_init(lua_State *L) {
     lua_pushcfunction(L, mouse_lua_get_position);
     lua_setfield(L, -2, "get_position");
 
-    lua_setglobal(L, "mouse");
+    lua_setfield(L, -2, "mouse");
 }
 
 void mouse_init(void) {

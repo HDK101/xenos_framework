@@ -91,6 +91,7 @@ static int music_lua_play(lua_State *L) {
 }
 
 int music_lua_init(lua_State *L) {
+    lua_getglobal(L, "xenos");
     lua_newtable(L);
 
     lua_pushcfunction(L, music_lua_load_stream);
@@ -99,7 +100,8 @@ int music_lua_init(lua_State *L) {
     lua_pushcfunction(L, music_lua_play);
     lua_setfield(L, -2, "play");
 
-    lua_setglobal(L, "music");
+    lua_setfield(L, -2, "music");
+    return 0;
 }
 
 int music_init(void) {

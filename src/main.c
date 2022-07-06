@@ -62,6 +62,9 @@ int main()
 
     luaL_openlibs(Lstate);
 
+    lua_newtable(Lstate);
+    lua_setglobal(Lstate, "xenos");
+
     sprite_lua_init(Lstate);
 
     keyboard_init();
@@ -79,13 +82,10 @@ int main()
     json_lua_init(Lstate);
     
     luaL_loadfile(Lstate, "test.lua");
-    int a = lua_pcall(Lstate, 0, 0, 0);
-    printf("%d\n", a);
+    int code = lua_pcall(Lstate, 0, 0, 0);
+    if (code == 2) printf("%s\n", lua_tostring(Lstate, -1));
 
-//    allegro_game_loop();
-
-    music_destroy();
-    allegro_destroy();
+    allegro_game_loop();
 
     music_destroy();
     allegro_destroy();

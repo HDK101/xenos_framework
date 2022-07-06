@@ -116,6 +116,7 @@ int sound_init(void) {
 // Arguments: 
 //    L: *lua_State
 int sound_lua_init(lua_State *L) {
+    lua_getglobal(L, "xenos");
     lua_newtable(L);
 
     lua_pushcfunction(L, sound_lua_load_sample);
@@ -125,4 +126,6 @@ int sound_lua_init(lua_State *L) {
     lua_setfield(L, -2, "play");
 
     lua_setglobal(L, "sound");
+    
+    lua_setfield(L, -2, "sound");
 }

@@ -20,6 +20,38 @@ static cvector_vector_type(int) pressed_keys_indexes = NULL;
 static bool keys_released[ALLEGRO_KEY_MAX];
 static cvector_vector_type(int) released_keys_indexes = NULL;
 
+static void stackDump(lua_State * L)
+{
+    int i;
+    int top = lua_gettop(L);
+
+    putchar('\n');
+    putchar('\n');
+
+    for (i = 1; i <= top; i++) {        /* repeat for each level */
+        int t = lua_type(L, i);
+
+        switch (t) {
+            case LUA_TSTRING:  /* strings */
+                printf("`%s'", lua_tostring(L, i));
+                break;
+            case LUA_TBOOLEAN: /* booleans */
+                printf(lua_toboolean(L, i) ? "true" : "false");
+                break;
+            case LUA_TNUMBER:  /* numbers */
+                printf("%g", lua_tonumber(L, i));
+                break;
+            default:           /* other values */
+                printf("%s", lua_typename(L, t));
+                break;
+        }
+        printf("  ");           /* put a separator */
+        printf("\n");           /* end the listing */
+    }
+    putchar('\n');
+    putchar('\n');
+}
+
 // Lua function
 // Function: press
 // Arguments: 
@@ -66,6 +98,7 @@ static void keyboard_lua_add_key(lua_State *L, const char *field, const int keyc
 // Arguments: 
 //    L: lua_State*
 void keyboard_lua_init(lua_State *L) {
+    lua_getglobal(L, "xenos");
     lua_newtable(L);
 
     lua_pushcfunction(L, keyboard_lua_press);
@@ -182,7 +215,7 @@ void keyboard_lua_init(lua_State *L) {
 
     lua_setfield(L, -2, "code");
     
-    lua_setglobal(L, "keyboard");
+    lua_setfield(L, -2, "keyboard");
 }
 
 // Global function
