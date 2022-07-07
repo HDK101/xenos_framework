@@ -15,6 +15,10 @@
 #include "lua/lauxlib.h"
 #include "lua/lualib.h"
 
+#include "lfs/lfs.h"
+
+#include "load_scripts.h"
+
 static lua_State *Lstate = NULL;
 
 static void stackDump(lua_State * L)
@@ -62,6 +66,11 @@ int main()
 
     luaL_openlibs(Lstate);
 
+    luaopen_lfs(Lstate);
+
+    lua_newtable(Lstate);
+    lua_setglobal(Lstate, "xenos");
+
     sprite_lua_init(Lstate);
 
     keyboard_init();
@@ -77,15 +86,14 @@ int main()
     music_lua_init(Lstate);
 
     json_lua_init(Lstate);
+
+    load_scripts(Lstate);
     
     luaL_loadfile(Lstate, "test.lua");
-    int a = lua_pcall(Lstate, 0, 0, 0);
-    printf("%d\n", a);
+    int code = lua_pcall(Lstate, 0, 0, 0);
+    if (code == 2) printf("%s\n", lua_tostring(Lstate, -1));
 
-//    allegro_game_loop();
-
-    music_destroy();
-    allegro_destroy();
+    allegro_game_loop();
 
     music_destroy();
     allegro_destroy();
