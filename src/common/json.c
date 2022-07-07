@@ -85,6 +85,7 @@ static int json_lua_parse(lua_State *L) {
   }
 
   navigate_parse(L, json);
+  cJSON_free(json);
   return 1;
 }
 
@@ -102,7 +103,7 @@ cJSON *navigate_stringify_array(lua_State *L) {
     lua_Unsigned size = lua_rawlen(L, -1);
 
     for (lua_Unsigned i = 1; i <= size; i++) {
-      lua_rawgeti(L, 1, i);
+      lua_rawgeti(L, -1, i);
       if (lua_isnumber(L, -1)) {
           double value = lua_tonumber(L, -1);
           cJSON *number = cJSON_CreateNumber(value);
@@ -169,12 +170,13 @@ static int json_lua_stringify(lua_State *L) {
         return lua_error(L);
     }
     
-    
     // get table
     luaL_checktype(L, 1, LUA_TTABLE);
 
     cJSON *json = navigate_stringify(L);
     lua_pushstring(L, cJSON_Print(json));
+
+    cJSON_free(json);
 
     return 1;
 }

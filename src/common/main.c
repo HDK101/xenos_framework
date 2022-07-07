@@ -15,6 +15,10 @@
 #include "lua/lauxlib.h"
 #include "lua/lualib.h"
 
+#include "lfs/lfs.h"
+
+#include "load_scripts.h"
+
 static lua_State *Lstate = NULL;
 
 static void stackDump(lua_State * L)
@@ -62,6 +66,8 @@ int main()
 
     luaL_openlibs(Lstate);
 
+    luaopen_lfs(Lstate);
+
     lua_newtable(Lstate);
     lua_setglobal(Lstate, "xenos");
 
@@ -80,6 +86,8 @@ int main()
     music_lua_init(Lstate);
 
     json_lua_init(Lstate);
+
+    load_scripts(Lstate);
     
     luaL_loadfile(Lstate, "test.lua");
     int code = lua_pcall(Lstate, 0, 0, 0);

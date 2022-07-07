@@ -1,25 +1,25 @@
 local sprite_test = sprite.load_file("player.png")
-print(xenos.keyboard)
-print(xenos.mouse)
-print(xenos.music)
-print(xenos.sound)
 
-error("asd")
+--[[
+save = Save:new("asd.json")
 
-a = xenos.json.parse("{ \"a\": 1 }")
+a = {}
+a.x = {}
+a.x.b = {1,2,3}
 
-print(xenos.json.stringify(a))
+save:add("lll", a)
+save:execute()
+--]]
+
+save = Save:load("asd.json")
+t = save:get()
+
+print(t.lll.x.b[1])
 
 function process(delta)
---  print(delta)
 end
 
 function draw()
   local keyboard = xenos.keyboard
-
-  if keyboard.press(keyboard.code.B) then
-    print("Hello!")
-  end
-
 --  sprite.draw(sprite_test, { x = mouse.get_position().x, y = mouse.get_position().y, angle = x })
 end

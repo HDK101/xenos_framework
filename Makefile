@@ -2,10 +2,8 @@ CC=gcc
 CFLAGS=-Wfatal-errors -Wall -Wextra -Wconversion -Wshadow
 UNUSED_CFLAGS=-Wpedantic
 LIBS=-lm -lallegro_font -lallegro_primitives -lallegro_acodec -lallegro_audio -lallegro_image -lallegro
-SOURCES=$(wildcard src/*.c)
-LUASOURCES=$(wildcard src/lua/*.c)
+SOURCES=$(wildcard src/common/*.c) $(wildcard src/common/**/*.c)
 OBJECTS=$(patsubst %.c, %.o, $(SOURCES))
-LUAOBJECTS=$(patsubst %.c, %.o, $(LUASOURCES))
 EXE=bin/main
 
 %.o: %.c  
@@ -13,8 +11,8 @@ EXE=bin/main
 
 all: $(EXE) 
 
-$(EXE): $(OBJECTS) $(LUAOBJECTS) 
-	$(CC) $(OBJECTS) $(LUAOBJECTS) -g -o $(EXE) $(CFLAGS) $(LIBS)
+$(EXE): $(OBJECTS) 
+	$(CC) $(OBJECTS) -g -o $(EXE) $(CFLAGS) $(LIBS)
 
 clean:
 	@find . -name '*.o' -delete
