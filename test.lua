@@ -21,5 +21,5 @@ end
 
 function draw()
   local keyboard = xenos.keyboard
---  sprite.draw(sprite_test, { x = mouse.get_position().x, y = mouse.get_position().y, angle = x })
+  sprite.draw(sprite_test, { x = xenos.mouse.get_position().x, y = xenos.mouse.get_position().y, angle = xenos.mouse.get_position().y })
 end

@@ -4,6 +4,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "config.h"
 
@@ -126,6 +127,42 @@ int sprite_lua_destroy_sprite(lua_State * L)
     return 0;
 }
 
+void sprite_check(lua_State * L, int id, int index, const char *file_name)
+{
+    SPRITE_DEBUG_PRINT("Sprite index: %d\n", index);
+
+    if (index >= sprites_count) {
+        lua_pushstring(L, "Invalid index\n");
+        lua_error(L);
+    }
+
+    if (strcmp(sprites_name[index], file_name) != 0) {
+        char message[200];
+
+        snprintf(message, 200,
+                 "Different file names detected, could not render sprite.\nexpected: %s got: %s.\n",
+                 sprites_name[index], file_name);
+        lua_pushstring(L, message);
+        lua_error(L);
+    }
+
+
+    if (id != sprites_id[index]) {
+        char message[200];
+
+        snprintf(message, 200,
+                 "Different IDs detected, could not render sprite.\nexpected: %d got: %d.\n",
+                 sprites_id[index], id);
+        lua_pushstring(L, message);
+        lua_error(L);
+    }
+
+    if (sprites[index] == NULL) {
+        lua_pushstring(L, "Empty bitmap pointer");
+        lua_error(L);
+    }
+}
+
 // Function: draw_sprite
 // Arguments:
 //   sprite : table
@@ -142,35 +179,14 @@ int sprite_lua_draw_sprite(lua_State * L)
     lua_getfield(L, 1, "index");
     int index = luaL_checkinteger(L, -1);
 
-    SPRITE_DEBUG_PRINT("Sprite index: %d\n", index);
+    lua_getfield(L, 1, "id");
+    const int id = luaL_checkinteger(L, -1);
 
     lua_getfield(L, 1, "file_name");
     const char *coming_file_name = luaL_checkstring(L, -1);
 
-    if (strcmp(sprites_name[index], coming_file_name) != 0) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr,
-                "Different file names detected, could not render sprite.\n");
-        fprintf(stderr, "expected: %s got: %s.\n", sprites_name[index],
-                coming_file_name);
-        return lua_error(L);
-    }
+    sprite_check(L, id, index, coming_file_name);
 
-    lua_getfield(L, 1, "id");
-    const int id = luaL_checkinteger(L, -1);
-
-    if (id != sprites_id[index]) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr, "Different IDs detected, could not render sprite.\n");
-        fprintf(stderr, "expected: %d got: %d.\n", sprites_id[index], id);
-        return lua_error(L);
-    }
-
-    if (sprites[index] == NULL) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr, "Empty bitmap pointer.\n");
-        return lua_error(L);
-    }
     // get 'rect' table
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_getfield(L, 2, "x");

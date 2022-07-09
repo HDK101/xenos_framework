@@ -4,7 +4,7 @@
 //    0: false
 //    1: true
 
-#define SPRITE_DEBUG 0
+#define SPRITE_DEBUG 1
 #define KEYBOARD_DEBUG 1
 #define SOUND_DEBUG 1
 

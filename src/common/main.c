@@ -52,9 +52,23 @@ void game_loop(double *delta_time)
 {
     lua_getglobal(Lstate, "process");
     lua_pushnumber(Lstate, *delta_time);
-    lua_pcall(Lstate, 1, 0, 0);
+    int process_code = lua_pcall(Lstate, 1, 0, 0);
+
+    if (process_code == 2) {
+        const char *str = lua_tostring(Lstate, -1);
+
+        fputs(str, stderr);
+        exit(1);
+    }
     lua_getglobal(Lstate, "draw");
-    lua_pcall(Lstate, 0, 0, 0);
+    int draw_code = lua_pcall(Lstate, 0, 0, 0);
+
+    if (draw_code == 2) {
+        const char *str = lua_tostring(Lstate, -1);
+
+        fputs(str, stderr);
+        exit(1);
+    }
 }
 
 int main()
@@ -88,10 +102,12 @@ int main()
     json_lua_init(Lstate);
 
     load_scripts(Lstate);
-    
+
     luaL_loadfile(Lstate, "test.lua");
     int code = lua_pcall(Lstate, 0, 0, 0);
-    if (code == 2) printf("%s\n", lua_tostring(Lstate, -1));
+
+    if (code == 2)
+        printf("%s\n", lua_tostring(Lstate, -1));
 
     allegro_game_loop();
 

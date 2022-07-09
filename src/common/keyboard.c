@@ -17,10 +17,10 @@
 static bool keys_pressed[ALLEGRO_KEY_MAX];
 static cvector_vector_type(int) pressed_keys_indexes = NULL;
 
-static bool keys_released[ALLEGRO_KEY_MAX];
-static cvector_vector_type(int) released_keys_indexes = NULL;
+     static bool keys_released[ALLEGRO_KEY_MAX];
+     static cvector_vector_type(int) released_keys_indexes = NULL;
 
-static void stackDump(lua_State * L)
+     static void stackDump(lua_State * L)
 {
     int i;
     int top = lua_gettop(L);
@@ -56,13 +56,15 @@ static void stackDump(lua_State * L)
 // Function: press
 // Arguments: 
 //    keycode: integer
-static int keyboard_lua_press(lua_State *L) {
+static int keyboard_lua_press(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
         return lua_error(L);
     }
     const int keycode = luaL_checkinteger(L, -1);
+
     lua_pushboolean(L, keys_pressed[keycode]);
     return 1;
 }
@@ -71,13 +73,15 @@ static int keyboard_lua_press(lua_State *L) {
 // Function: release
 // Arguments: 
 //    keycode: integer
-static int keyboard_lua_release(lua_State *L) {
+static int keyboard_lua_release(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
         return lua_error(L);
     }
     const int keycode = luaL_checkinteger(L, -1);
+
     lua_pushboolean(L, keys_released[keycode]);
     return 1;
 }
@@ -88,7 +92,9 @@ static int keyboard_lua_release(lua_State *L) {
 //    L: lua_State*
 //    field: char*
 //    keycode: int
-static void keyboard_lua_add_key(lua_State *L, const char *field, const int keycode) {
+static void keyboard_lua_add_key(lua_State * L, const char *field,
+                                 const int keycode)
+{
     lua_pushinteger(L, keycode);
     lua_setfield(L, -2, field);
 }
@@ -97,13 +103,14 @@ static void keyboard_lua_add_key(lua_State *L, const char *field, const int keyc
 // Function: keyboard_lua_init
 // Arguments: 
 //    L: lua_State*
-void keyboard_lua_init(lua_State *L) {
+void keyboard_lua_init(lua_State * L)
+{
     lua_getglobal(L, "xenos");
     lua_newtable(L);
 
     lua_pushcfunction(L, keyboard_lua_press);
     lua_setfield(L, -2, "press");
-    
+
     lua_pushcfunction(L, keyboard_lua_release);
     lua_setfield(L, -2, "release");
 
@@ -136,47 +143,50 @@ void keyboard_lua_init(lua_State *L) {
     keyboard_lua_add_key(L, "Z", ALLEGRO_KEY_Z);
 
     char num_string[6];
+
     for (int i = 0; i < 9; i++) {
         sprintf(num_string, "KEY_%d", i);
         keyboard_lua_add_key(L, num_string, ALLEGRO_KEY_0 + i);
     }
 
     /*
-    keyboard_lua_add_key(L, "ZERO", ALLEGRO_KEY_0);
-    keyboard_lua_add_key(L, "ONE", ALLEGRO_KEY_1);
-    keyboard_lua_add_key(L, "TWO", ALLEGRO_KEY_2);
-    keyboard_lua_add_key(L, "THREE", ALLEGRO_KEY_3);
-    keyboard_lua_add_key(L, "FOUR", ALLEGRO_KEY_4);
-    keyboard_lua_add_key(L, "FIVE", ALLEGRO_KEY_5);
-    keyboard_lua_add_key(L, "SIX", ALLEGRO_KEY_6);
-    keyboard_lua_add_key(L, "SEVEN", ALLEGRO_KEY_7);
-    keyboard_lua_add_key(L, "EIGHT", ALLEGRO_KEY_8);
-    keyboard_lua_add_key(L, "NINE", ALLEGRO_KEY_9);
-    */
-    
+       keyboard_lua_add_key(L, "ZERO", ALLEGRO_KEY_0);
+       keyboard_lua_add_key(L, "ONE", ALLEGRO_KEY_1);
+       keyboard_lua_add_key(L, "TWO", ALLEGRO_KEY_2);
+       keyboard_lua_add_key(L, "THREE", ALLEGRO_KEY_3);
+       keyboard_lua_add_key(L, "FOUR", ALLEGRO_KEY_4);
+       keyboard_lua_add_key(L, "FIVE", ALLEGRO_KEY_5);
+       keyboard_lua_add_key(L, "SIX", ALLEGRO_KEY_6);
+       keyboard_lua_add_key(L, "SEVEN", ALLEGRO_KEY_7);
+       keyboard_lua_add_key(L, "EIGHT", ALLEGRO_KEY_8);
+       keyboard_lua_add_key(L, "NINE", ALLEGRO_KEY_9);
+     */
+
     char pad_string[6];
+
     for (int i = 0; i < 9; i++) {
         sprintf(pad_string, "PAD_%d", i);
         keyboard_lua_add_key(L, pad_string, ALLEGRO_KEY_PAD_0 + i);
     }
     /*
-    keyboard_lua_add_key(L, "PAD_1", ALLEGRO_KEY_PAD_1);
-    keyboard_lua_add_key(L, "PAD_2", ALLEGRO_KEY_PAD_2);
-    keyboard_lua_add_key(L, "PAD_3", ALLEGRO_KEY_PAD_3);
-    keyboard_lua_add_key(L, "PAD_4", ALLEGRO_KEY_PAD_4);
-    keyboard_lua_add_key(L, "PAD_5", ALLEGRO_KEY_PAD_5);
-    keyboard_lua_add_key(L, "PAD_6", ALLEGRO_KEY_PAD_6);
-    keyboard_lua_add_key(L, "PAD_7", ALLEGRO_KEY_PAD_7);
-    keyboard_lua_add_key(L, "PAD_8", ALLEGRO_KEY_PAD_8);
-    keyboard_lua_add_key(L, "PAD_9", ALLEGRO_KEY_PAD_9);
-    */
-    
+       keyboard_lua_add_key(L, "PAD_1", ALLEGRO_KEY_PAD_1);
+       keyboard_lua_add_key(L, "PAD_2", ALLEGRO_KEY_PAD_2);
+       keyboard_lua_add_key(L, "PAD_3", ALLEGRO_KEY_PAD_3);
+       keyboard_lua_add_key(L, "PAD_4", ALLEGRO_KEY_PAD_4);
+       keyboard_lua_add_key(L, "PAD_5", ALLEGRO_KEY_PAD_5);
+       keyboard_lua_add_key(L, "PAD_6", ALLEGRO_KEY_PAD_6);
+       keyboard_lua_add_key(L, "PAD_7", ALLEGRO_KEY_PAD_7);
+       keyboard_lua_add_key(L, "PAD_8", ALLEGRO_KEY_PAD_8);
+       keyboard_lua_add_key(L, "PAD_9", ALLEGRO_KEY_PAD_9);
+     */
+
     char f_string[3];
+
     for (int i = 1; i < 12; i++) {
         sprintf(f_string, "F%d", i);
         keyboard_lua_add_key(L, f_string, ALLEGRO_KEY_F1 + (i - 1));
     }
-    
+
     keyboard_lua_add_key(L, "ESCAPE", ALLEGRO_KEY_ESCAPE);
     keyboard_lua_add_key(L, "TILDE", ALLEGRO_KEY_TILDE);
     keyboard_lua_add_key(L, "MINUS", ALLEGRO_KEY_MINUS);
@@ -214,14 +224,15 @@ void keyboard_lua_init(lua_State *L) {
     keyboard_lua_add_key(L, "RWIN", ALLEGRO_KEY_RWIN);
 
     lua_setfield(L, -2, "code");
-    
+
     lua_setfield(L, -2, "keyboard");
 }
 
 // Global function
 // Function: keyboard_init
 // Arguments: void
-void keyboard_init(void) {
+void keyboard_init(void)
+{
     for (int i = 0; i < ALLEGRO_KEY_MAX; i++) {
         keys_pressed[i] = false;
     }
@@ -231,7 +242,8 @@ void keyboard_init(void) {
 // Function: keyboard_event_down
 // Arguments: 
 //   event: ALLEGRO_EVENT*
-void keyboard_event_down(ALLEGRO_EVENT *event) {
+void keyboard_event_down(ALLEGRO_EVENT * event)
+{
     keys_pressed[event->keyboard.keycode] = true;
     cvector_push_back(pressed_keys_indexes, event->keyboard.keycode);
     KEYBOARD_DEBUG_PRINT("KeyCode press: %d\n", event->keyboard.keycode);
@@ -241,7 +253,8 @@ void keyboard_event_down(ALLEGRO_EVENT *event) {
 // Function: keyboard_event_up
 // Arguments: 
 //   event: ALLEGRO_EVENT*
-void keyboard_event_up(ALLEGRO_EVENT *event) {
+void keyboard_event_up(ALLEGRO_EVENT * event)
+{
     keys_released[event->keyboard.keycode] = true;
     cvector_push_back(released_keys_indexes, event->keyboard.keycode);
     KEYBOARD_DEBUG_PRINT("KeyCode release: %d\n", event->keyboard.keycode);
@@ -250,7 +263,8 @@ void keyboard_event_up(ALLEGRO_EVENT *event) {
 // Global function
 // Function: keyboard_clear
 // Arguments: void
-void keyboard_clear(void) {
+void keyboard_clear(void)
+{
     int *it = NULL;
 
     //PRESS
@@ -259,18 +273,17 @@ void keyboard_clear(void) {
         keys_pressed[*it] = false;
         KEYBOARD_DEBUG_PRINT("Key press clear: %d\n", *it);
     }
-    while(cvector_size(pressed_keys_indexes) > 0) {
+    while (cvector_size(pressed_keys_indexes) > 0) {
         cvector_pop_back(pressed_keys_indexes);
     }
-    
+
     //RELEASE
     for (it = cvector_begin(released_keys_indexes);
          it != cvector_end(released_keys_indexes); ++it) {
         keys_released[*it] = false;
         KEYBOARD_DEBUG_PRINT("Key release clear: %d\n", *it);
     }
-    while(cvector_size(released_keys_indexes) > 0) {
+    while (cvector_size(released_keys_indexes) > 0) {
         cvector_pop_back(released_keys_indexes);
     }
 }
-

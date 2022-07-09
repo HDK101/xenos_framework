@@ -13,7 +13,7 @@ static ALLEGRO_TIMER *timer = NULL;
 static ALLEGRO_EVENT_QUEUE *queue = NULL;
 static ALLEGRO_DISPLAY *display = NULL;
 
-static void (*game_loop_pointer)(double*);
+static void (*game_loop_pointer)(double *);
 
 static double elapsed_time = 0.0;
 
@@ -56,15 +56,15 @@ void allegro_game_loop(void)
                 redraw = true;
             else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                 game_break = true;
-            else if(event.type == ALLEGRO_EVENT_KEY_DOWN)
+            else if (event.type == ALLEGRO_EVENT_KEY_DOWN)
                 keyboard_event_down(&event);
-            else if(event.type == ALLEGRO_EVENT_KEY_UP)
+            else if (event.type == ALLEGRO_EVENT_KEY_UP)
                 keyboard_event_up(&event);
-            else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+            else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
                 mouse_event_down(&event);
-            else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+            else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
                 mouse_event_up(&event);
-            else if(event.type == ALLEGRO_EVENT_MOUSE_AXES)
+            else if (event.type == ALLEGRO_EVENT_MOUSE_AXES)
                 mouse_event_move(&event);
 
         }
@@ -99,7 +99,7 @@ void allegro_destroy(void)
     al_uninstall_system();
 }
 
-void allegro_set_game_loop(void (*loop)(double*))
+void allegro_set_game_loop(void (*loop)(double *))
 {
     game_loop_pointer = loop;
 }

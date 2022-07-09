@@ -1,3 +1,4 @@
-void xenos_init(void) {
-    
+void xenos_init(void)
+{
+
 }

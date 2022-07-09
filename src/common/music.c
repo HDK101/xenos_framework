@@ -13,33 +13,36 @@
 
 #define MAX_STREAMS 100
 
-static ALLEGRO_AUDIO_STREAM* current_music = NULL;
+static ALLEGRO_AUDIO_STREAM *current_music = NULL;
 static ALLEGRO_AUDIO_STREAM *streams[MAX_STREAMS];
 static int streams_id[MAX_STREAMS];
 static int streams_count = 0;
 static cvector_vector_type(int) streams_unused_indexes = NULL;
 
-static void load_stream_at_index(const char *file_name, const int index) {
+     static void load_stream_at_index(const char *file_name, const int index)
+{
     streams[index] = al_load_audio_stream(file_name, 2, 2048);
     assert(streams[index] != NULL);
     streams_id[index]++;
 }
 
-static int load_stream(const char *file_name) {
+static int load_stream(const char *file_name)
+{
     if (cvector_size(streams_unused_indexes) > 0) {
         int end = cvector_end(streams_unused_indexes);
+
         cvector_pop_back(streams_unused_indexes);
         load_stream_at_index(file_name, streams_count);
         return end;
-    }
-    else {
+    } else {
         load_stream_at_index(file_name, streams_count);
         return streams_count++;
     }
 }
 
 
-static int music_lua_load_stream(lua_State *L) {
+static int music_lua_load_stream(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
@@ -59,7 +62,8 @@ static int music_lua_load_stream(lua_State *L) {
     return 1;
 }
 
-static int music_lua_play(lua_State *L) {
+static int music_lua_play(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
@@ -90,7 +94,8 @@ static int music_lua_play(lua_State *L) {
     return 0;
 }
 
-int music_lua_init(lua_State *L) {
+int music_lua_init(lua_State * L)
+{
     lua_getglobal(L, "xenos");
     lua_newtable(L);
 
@@ -104,7 +109,8 @@ int music_lua_init(lua_State *L) {
     return 0;
 }
 
-int music_init(void) {
+int music_init(void)
+{
     for (int i = 0; i < MAX_STREAMS; i++) {
         streams_id[i] = 0;
         streams[i] = NULL;
@@ -112,10 +118,11 @@ int music_init(void) {
     return 0;
 }
 
-int music_destroy(void) {
+int music_destroy(void)
+{
     for (int i = 0; i < MAX_STREAMS; i++) {
-        if (streams[i] != NULL) al_destroy_audio_stream(streams[i]);
+        if (streams[i] != NULL)
+            al_destroy_audio_stream(streams[i]);
     }
     return 0;
 }
-

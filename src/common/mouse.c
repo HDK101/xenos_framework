@@ -21,15 +21,19 @@ static int mouse_y = 0;
 // Function: press
 // Arguments:
 //    keycode: integer
-static int mouse_lua_press(lua_State *L) {
+static int mouse_lua_press(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
         return lua_error(L);
     }
     const int keycode = luaL_checkinteger(L, -1);
-    if (keycode == 0) lua_pushboolean(L, mouse_left_pressed);
-    else if (keycode == 2) lua_pushboolean(L, mouse_right_pressed);
+
+    if (keycode == 0)
+        lua_pushboolean(L, mouse_left_pressed);
+    else if (keycode == 2)
+        lua_pushboolean(L, mouse_right_pressed);
     return 1;
 }
 
@@ -37,21 +41,26 @@ static int mouse_lua_press(lua_State *L) {
 // Function: release
 // Arguments:
 //    keycode: integer
-static int mouse_lua_release(lua_State *L) {
+static int mouse_lua_release(lua_State * L)
+{
     if (lua_gettop(L) != 1) {
         fprintf(stderr, "\n--ERROR--\n");
         fprintf(stderr, "Expected exactly 1 argument.\n");
         return lua_error(L);
     }
     const int keycode = luaL_checkinteger(L, -1);
-    if (keycode == 0) lua_pushboolean(L, mouse_left_released);
-    else if (keycode == 2) lua_pushboolean(L, mouse_right_released);
+
+    if (keycode == 0)
+        lua_pushboolean(L, mouse_left_released);
+    else if (keycode == 2)
+        lua_pushboolean(L, mouse_right_released);
     return 1;
 }
 
 // Lua function
 // Function: get_position
-static int mouse_lua_get_position(lua_State *L) {
+static int mouse_lua_get_position(lua_State * L)
+{
     lua_newtable(L);
     lua_pushnumber(L, mouse_x);
     lua_setfield(L, -2, "x");
@@ -60,22 +69,26 @@ static int mouse_lua_get_position(lua_State *L) {
     return 1;
 }
 
-void mouse_event_down(ALLEGRO_EVENT *event) {
+void mouse_event_down(ALLEGRO_EVENT * event)
+{
     mouse_left_pressed = event->mouse.button & 1;
     mouse_right_pressed = event->mouse.button & 2;
 }
 
-void mouse_event_up(ALLEGRO_EVENT *event) {
+void mouse_event_up(ALLEGRO_EVENT * event)
+{
     mouse_left_released = event->mouse.button & 1;
     mouse_right_released = event->mouse.button & 2;
 }
 
-void mouse_event_move(ALLEGRO_EVENT *event) {
+void mouse_event_move(ALLEGRO_EVENT * event)
+{
     mouse_x = event->mouse.x;
     mouse_y = event->mouse.y;
 }
 
-void mouse_clear(void) {
+void mouse_clear(void)
+{
     mouse_left_pressed = false;
     mouse_right_pressed = false;
 
@@ -83,7 +96,8 @@ void mouse_clear(void) {
     mouse_right_released = false;
 }
 
-void mouse_lua_init(lua_State *L) {
+void mouse_lua_init(lua_State * L)
+{
     lua_getglobal(L, "xenos");
     lua_newtable(L);
 
@@ -99,7 +113,7 @@ void mouse_lua_init(lua_State *L) {
     lua_setfield(L, -2, "mouse");
 }
 
-void mouse_init(void) {
+void mouse_init(void)
+{
     printf("Mouse init!\n");
 }
-
