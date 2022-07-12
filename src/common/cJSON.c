@@ -311,8 +311,7 @@ static cJSON_bool parse_number(cJSON * const item,
     /* copy the number into a temporary buffer and replace '.' with the decimal point
      * of the current locale (for strtod)
      * This also takes care of '\0' not necessarily being available for marking the end of the input */
-    for (i = 0;
-         (i < (sizeof(number_c_string) - 1))
+    for (i = 0; (i < (sizeof(number_c_string) - 1))
          && can_access_at_index(input_buffer, i); i++) {
         switch (buffer_at_offset(input_buffer)[i]) {
             case '0':
@@ -2617,9 +2616,9 @@ CJSON_PUBLIC(cJSON *) cJSON_Duplicate(const cJSON * item, cJSON_bool recurse)
     }
     if (item->string) {
         newitem->string =
-            (item->type & cJSON_StringIsConst) ? item->
-            string : (char *)cJSON_strdup((unsigned char *)item->string,
-                                          &global_hooks);
+            (item->
+             type & cJSON_StringIsConst) ? item->string : (char *)
+            cJSON_strdup((unsigned char *)item->string, &global_hooks);
         if (!newitem->string) {
             goto fail;
         }
@@ -2692,8 +2691,8 @@ static void minify_string(char **input, char **output)
     *output += static_strlen("\"");
 
 
-    for (; (*input)[0] != '\0'; (void)++(*input), ++ (*output)) {
-        (*output)[0] =(*input)[0];
+    for (; (*input)[0] != '\0'; (void)++(*input), ++(*output)) {
+        (*output)[0] = (*input)[0];
 
         if ((*input)[0] == '\"') {
             (*output)[0] = '\"';

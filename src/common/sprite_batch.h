@@ -9,5 +9,7 @@ typedef struct SpriteRegionItem {
   float x;
   float y;
 } SpriteRegionItem;
+   
+int sprite_batch_lua_init(Lstate);
 
 #endif /* ifndef SPRITE_BATCH */

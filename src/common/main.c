@@ -3,6 +3,7 @@
 
 #include "allegro_init.h"
 #include "sprite.h"
+#include "sprite_batch.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "sound.h"
@@ -101,15 +102,21 @@ int main()
 
     json_lua_init(Lstate);
 
+    sprite_batch_lua_init(Lstate);
+
     load_scripts(Lstate);
 
     luaL_loadfile(Lstate, "test.lua");
     int code = lua_pcall(Lstate, 0, 0, 0);
 
-    if (code == 2)
-        printf("%s\n", lua_tostring(Lstate, -1));
+    if (code == 2) {
+        fputs(lua_tostring(Lstate, -1), stderr);
+        return 1;
+    }
 
     allegro_game_loop();
+
+    sprite_clear();
 
     music_destroy();
     allegro_destroy();
