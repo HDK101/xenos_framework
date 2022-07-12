@@ -729,5 +729,56 @@
    "src/common/lua/lzio.o"
   ],
   "file": "src/common/lua/lzio.c"
+ },
+ {
+  "directory": "/home/lucashym/Documentos/Projects/xenos_framework",
+  "arguments": [
+   "gcc",
+   "-Wfatal-errors",
+   "-Wall",
+   "-Wextra",
+   "-Wconversion",
+   "-Wshadow",
+   "-g",
+   "-c",
+   "src/common/load_scripts.c",
+   "-o",
+   "src/common/load_scripts.o"
+  ],
+  "file": "src/common/load_scripts.c"
+ },
+ {
+  "directory": "/home/lucashym/Documentos/Projects/xenos_framework",
+  "arguments": [
+   "gcc",
+   "-Wfatal-errors",
+   "-Wall",
+   "-Wextra",
+   "-Wconversion",
+   "-Wshadow",
+   "-g",
+   "-c",
+   "src/common/sprite_batch.c",
+   "-o",
+   "src/common/sprite_batch.o"
+  ],
+  "file": "src/common/sprite_batch.c"
+ },
+ {
+  "directory": "/home/lucashym/Documentos/Projects/xenos_framework",
+  "arguments": [
+   "gcc",
+   "-Wfatal-errors",
+   "-Wall",
+   "-Wextra",
+   "-Wconversion",
+   "-Wshadow",
+   "-g",
+   "-c",
+   "src/common/lfs/lfs.c",
+   "-o",
+   "src/common/lfs/lfs.o"
+  ],
+  "file": "src/common/lfs/lfs.c"
  }
 ]

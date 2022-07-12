@@ -16,6 +16,9 @@
 
 #define MAX_SPRITES 100
 
+#define SPRITE_TYPE_FULL (1 << 0)
+#define SPRITE_TYPE_SLICE (1 << 1)
+
 static ALLEGRO_BITMAP *sprites[MAX_SPRITES];
 static int sprites_size_width[MAX_SPRITES];
 static int sprites_size_height[MAX_SPRITES];
@@ -76,8 +79,7 @@ static void set_sprite_name(const int index, const char *file_name)
 int sprite_lua_load_sprite(lua_State * L)
 {
     if (lua_gettop(L) != 1) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr, "Expected exactly 1 argument.\n");
+        lua_pushstring(L, "Expected exactly 1 arguments.\n");
         return lua_error(L);
     }
 
@@ -92,6 +94,8 @@ int sprite_lua_load_sprite(lua_State * L)
     lua_setfield(L, -2, "file_name");
     lua_pushinteger(L, sprites_id[sprite_index]);
     lua_setfield(L, -2, "id");
+    lua_pushinteger(L, SPRITE_TYPE_FULL);
+    lua_setfield(L, -2, "type");
     set_sprite_name(sprite_index, file_name);
     return 1;
 }
@@ -103,8 +107,7 @@ int sprite_lua_load_sprite(lua_State * L)
 int sprite_lua_destroy_sprite(lua_State * L)
 {
     if (lua_gettop(L) != 1) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr, "Expected exactly 1 argument.\n");
+        lua_pushstring(L, "Expected exactly 1 arguments.\n");
         return lua_error(L);
     }
 
@@ -125,6 +128,11 @@ int sprite_lua_destroy_sprite(lua_State * L)
         SPRITE_DEBUG_PRINT("Unused index: %d\n", *it);
     }
     return 0;
+}
+
+ALLEGRO_BITMAP *sprite_get_bitmap(int index)
+{
+    return sprites[index];
 }
 
 void sprite_check(lua_State * L, int id, int index, const char *file_name)
@@ -163,6 +171,60 @@ void sprite_check(lua_State * L, int id, int index, const char *file_name)
     }
 }
 
+// Function:  slice
+// Arguments:
+//   sprite : table
+//   slice: table
+int sprite_lua_slice_sprite(lua_State * L)
+{
+    if (lua_gettop(L) != 2) {
+        lua_pushstring(L, "Expected exactly 2 arguments.\n");
+        return lua_error(L);
+    }
+
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "index");
+    const int index = luaL_checkinteger(L, -1);
+
+    lua_getfield(L, 1, "id");
+    const int id = luaL_checkinteger(L, -1);
+
+    lua_getfield(L, 1, "file_name");
+    const char *coming_file_name = luaL_checkstring(L, -1);
+
+    sprite_check(L, id, index, coming_file_name);
+
+    luaL_checktype(L, 2, LUA_TTABLE);
+
+    lua_newtable(L);
+
+    lua_getfield(L, 2, "sx");
+    lua_setfield(L, -2, "sx");
+
+    lua_getfield(L, 2, "sy");
+    lua_setfield(L, -2, "sy");
+
+    lua_getfield(L, 2, "sw");
+    lua_setfield(L, -2, "sw");
+
+    lua_getfield(L, 2, "sh");
+    lua_setfield(L, -2, "sh");
+
+    lua_pushinteger(L, index);
+    lua_setfield(L, -2, "index");
+
+    lua_pushinteger(L, id);
+    lua_setfield(L, -2, "id");
+
+    lua_pushstring(L, coming_file_name);
+    lua_setfield(L, -2, "file_name");
+
+    lua_pushinteger(L, SPRITE_TYPE_SLICE);
+    lua_setfield(L, -2, "type");
+
+    return 1;
+}
+
 // Function: draw_sprite
 // Arguments:
 //   sprite : table
@@ -170,8 +232,7 @@ void sprite_check(lua_State * L, int id, int index, const char *file_name)
 int sprite_lua_draw_sprite(lua_State * L)
 {
     if (lua_gettop(L) != 2) {
-        fprintf(stderr, "\n--ERROR--\n");
-        fprintf(stderr, "Expected exactly 2 arguments.\n");
+        lua_pushstring(L, "Expected exactly 1 argument.\n");
         return lua_error(L);
     }
     // get 'sprite' table
@@ -184,6 +245,9 @@ int sprite_lua_draw_sprite(lua_State * L)
 
     lua_getfield(L, 1, "file_name");
     const char *coming_file_name = luaL_checkstring(L, -1);
+
+    lua_getfield(L, 1, "type");
+    int type = luaL_checkinteger(L, -1);
 
     sprite_check(L, id, index, coming_file_name);
 
@@ -200,9 +264,35 @@ int sprite_lua_draw_sprite(lua_State * L)
 
     SPRITE_DEBUG_PRINT("X: %lf Y: %lf\n", x, y);
     SPRITE_DEBUG_PRINT("Angle: %lf\n", angle);
-    al_draw_rotated_bitmap(sprites[index], sprites_size_width[index] / 2,
-                           sprites_size_height[index] / 2, x, y, angle, 0);
+    if (type == SPRITE_TYPE_FULL)
+        al_draw_rotated_bitmap(sprites[index], sprites_size_width[index] / 2,
+                               sprites_size_height[index] / 2, x, y, angle,
+                               0);
+    else if (type == SPRITE_TYPE_SLICE) {
+        lua_getfield(L, 1, "sx");
+        const int sx = luaL_checkinteger(L, -1);
+
+        lua_getfield(L, 1, "sy");
+        const int sy = luaL_checkinteger(L, -1);
+
+        lua_getfield(L, 1, "sw");
+        const int sw = luaL_checkinteger(L, -1);
+
+        lua_getfield(L, 1, "sh");
+        const int sh = luaL_checkinteger(L, -1);
+
+        al_draw_bitmap_region(sprites[index], sx, sy, sw, sh, x, y, 0);
+    }
     return 0;
+}
+
+void sprite_clear(void)
+{
+    for (int i = 0; i < sprites_count; i++) {
+        al_destroy_bitmap(sprites[i]);
+        sdsfree(sprites_name[i]);
+    }
+    sprites_count = 0;
 }
 
 int sprite_lua_init(lua_State * L)
@@ -214,6 +304,9 @@ int sprite_lua_init(lua_State * L)
 
     lua_pushcfunction(L, sprite_lua_draw_sprite);
     lua_setfield(L, -2, "draw");
+
+    lua_pushcfunction(L, sprite_lua_slice_sprite);
+    lua_setfield(L, -2, "slice");
 
     lua_pushcfunction(L, sprite_lua_destroy_sprite);
     lua_setfield(L, -2, "destroy");
