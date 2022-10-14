@@ -54,7 +54,7 @@ function process(delta)
 end
 
 function draw()
-  local keyboard = xenos.keyboard
-  sprite.draw(sprite_slice, { x = xenos.mouse.get_position().x, y = xenos.mouse.get_position().y, angle = xenos.mouse.get_position().y })
-  xenos.sprite_batch.draw()
+--  local keyboard = xenos.keyboard
+--  sprite.draw(sprite_slice, { x = xenos.mouse.get_position().x, y = xenos.mouse.get_position().y, angle = xenos.mouse.get_position().y })
+--  xenos.sprite_batch.draw()
 end

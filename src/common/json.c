@@ -86,7 +86,7 @@ static int json_lua_parse(lua_State * L)
     }
 
     navigate_parse(L, json);
-    cJSON_free(json);
+    cJSON_Delete(json);
     return 1;
 }
 
