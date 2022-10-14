@@ -180,7 +180,7 @@ void keyboard_lua_init(lua_State * L)
        keyboard_lua_add_key(L, "PAD_9", ALLEGRO_KEY_PAD_9);
      */
 
-    char f_string[3];
+    char f_string[4];
 
     for (int i = 1; i < 12; i++) {
         sprintf(f_string, "F%d", i);

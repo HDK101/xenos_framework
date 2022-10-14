@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wfatal-errors -Wall -Wextra -Wconversion -Wshadow
+CFLAGS=-Wfatal-errors -Wall -Wextra -Wconversion -Wshadow -fsanitize=address
 UNUSED_CFLAGS=-Wpedantic
 LIBS=-lm -lallegro_font -lallegro_primitives -lallegro_acodec -lallegro_audio -lallegro_image -lallegro
 SOURCES=$(wildcard src/common/*.c) $(wildcard src/common/**/*.c)
