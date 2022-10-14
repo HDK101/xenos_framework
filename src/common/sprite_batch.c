@@ -1,13 +1,13 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 #include "sprite_batch.h"
 #include "sprite.h"
 #include "cvector.h"
-
-#include "lua/lua.h"
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
 
 static cvector_vector_type(SpriteRegionItem *) items;
      static ALLEGRO_BITMAP *target;

@@ -4,15 +4,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 #include "sds.h"
 
 #include "cvector.h"
 
 #include "config.h"
-
-#include "lua/lua.h"
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
 
 static bool keys_pressed[ALLEGRO_KEY_MAX];
 static cvector_vector_type(int) pressed_keys_indexes = NULL;

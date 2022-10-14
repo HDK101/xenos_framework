@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 
 #include <allegro5/allegro.h>
-#include "lua/lua.h"
+#include <lua.h>
 
 void keyboard_lua_init(lua_State *L);
 void keyboard_init(void);

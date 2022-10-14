@@ -6,10 +6,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "config.h"
+#include <lualib.h>
+#include <lauxlib.h>
 
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
+#include "config.h"
 
 #include "cvector.h"
 #include "sds.h"
@@ -58,6 +58,7 @@ static int load_sprite(const char *file_name)
         cvector_pop_back(sprites_unused_indexes);
         load_sprite_at_index(file_name, *last_index);
     }
+    return sprites_count;
 }
 
 // Internal function
@@ -281,7 +282,7 @@ int sprite_lua_draw_sprite(lua_State * L)
         lua_getfield(L, 1, "sh");
         const int sh = luaL_checkinteger(L, -1);
 
-        al_draw_bitmap_region(sprites[index], sx, sy, sw, sh, x, y, 0);
+        al_draw_bitmap_region(sprites[index], (float)sx, (float)sy, (float)sw, (float)sh, (float)x, (float)y, 0);
     }
     return 0;
 }

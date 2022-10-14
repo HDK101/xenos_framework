@@ -1,7 +1,7 @@
 #ifndef MUSIC_H
 #define MUSIC_H
 
-#include "lua/lua.h"
+#include <lua.h>
 
 int music_init(void);
 int music_destroy(void);

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <allegro5/allegro5.h>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 #include "allegro_init.h"
 #include "sprite.h"
 #include "sprite_batch.h"
@@ -11,10 +15,6 @@
 #include "json.h"
 
 #include "cJSON.h"
-
-#include "lua/lua.h"
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
 
 #include "lfs/lfs.h"
 

@@ -2,11 +2,11 @@
 #include <allegro5/allegro_audio.h>
 #include <assert.h>
 
-#include "config.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 
-#include "lua/lua.h"
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
+#include "config.h"
 
 #include "cvector.h"
 

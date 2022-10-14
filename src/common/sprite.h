@@ -4,7 +4,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 
-#include "lua/lua.h"
+#include <lua.h>
 
 void sprite_clear(void);
 void sprite_check(lua_State * L, int id, int index, const char *file_name);

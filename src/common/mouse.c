@@ -1,12 +1,12 @@
 #include "mouse.h"
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <allegro5/allegro.h>
-
-#include "lua/lua.h"
-#include "lua/lauxlib.h"
-#include "lua/lualib.h"
 
 static bool mouse_left_pressed = 0;
 static bool mouse_right_pressed = 0;

@@ -3,7 +3,7 @@
 
 #include "cJSON.h"
 
-#include "lua/lua.h"
+#include <lua.h>
 
 void create_json(lua_State *L, cJSON *json);
 cJSON *navigate_stringify_array(lua_State *L);

@@ -2,7 +2,7 @@
 #define MOUSE_H
 
 #include <allegro5/allegro.h>
-#include "lua/lua.h"
+#include <lua.h>
 
 void mouse_event_down(ALLEGRO_EVENT *event);
 void mouse_event_up(ALLEGRO_EVENT *event);
